@@ -85,7 +85,7 @@ export default function ListPage({ snippets, selectedAuthor }) {
         marginBottom: '1rem'
       }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <h1 style={{ margin: 0, marginRight: '1rem' }}>コード一覧</h1>
+          <h1 style={{ margin: 0, marginRight: '1rem' }}>タイトル一覧</h1>
           <a href="/" style={{
             padding: '0.4rem 0.8rem',
             fontSize: '0.9rem',
