@@ -7,6 +7,7 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
 
+// サーバーサイドでデータ取得（投稿者で絞り込み対応）
 export async function getServerSideProps(context) {
   const author = context.query.author || null;
 
@@ -16,7 +17,7 @@ export async function getServerSideProps(context) {
     .order('created_at', { ascending: false });
 
   if (author) {
-    query = query.eq('author', author);
+    query = query.eq('author', author === 'y' ? 'yo' : 'kanako');
   }
 
   const { data, error } = await query;
@@ -74,25 +75,44 @@ export default function ListPage({ snippets, selectedAuthor }) {
     router.push(author ? `/list?author=${author}` : '/list');
   };
 
-  const displayName = (author) => {
-    return author === 'yo' ? 'y' : author === 'kanako' ? 'k' : author;
-  };
-
   return (
     <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-      <h1>コード一覧</h1>
+      {/* タイトル＋戻るボタン */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '1rem'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <h1 style={{ margin: 0, marginRight: '1rem' }}>コード一覧</h1>
+          <a href="/" style={{
+            padding: '0.4rem 0.8rem',
+            fontSize: '0.9rem',
+            background: '#eaeaea',
+            color: '#333',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            textDecoration: 'none'
+          }}>
+            投稿ページへ戻る
+          </a>
+        </div>
+      </div>
 
+      {/* 投稿者フィルタ */}
       <div style={{ marginBottom: '1rem' }}>
         <label>
           投稿者で絞り込み:{' '}
           <select value={selectedAuthor || ''} onChange={handleAuthorChange}>
             <option value="">すべて</option>
-            <option value="yo">y</option>
-            <option value="kanako">k</option>
+            <option value="y">y</option>
+            <option value="k">k</option>
           </select>
         </label>
       </div>
 
+      {/* 操作ボタン */}
       <div style={{ marginBottom: '1rem' }}>
         <button onClick={selectAll} style={{ marginRight: '0.5rem' }}>
           ✅ 全選択
@@ -115,6 +135,7 @@ export default function ListPage({ snippets, selectedAuthor }) {
         </button>
       </div>
 
+      {/* スニペット一覧 */}
       <ul>
         {snippets.map((s) => (
           <li key={s.id} style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center' }}>
@@ -127,7 +148,7 @@ export default function ListPage({ snippets, selectedAuthor }) {
             <a href={`/code/${s.id}`} target="_blank" rel="noopener noreferrer" style={{ marginRight: '1rem' }}>
               {s.title || '(無題)'} → /code/{s.id}
             </a>
-            <span style={{ fontSize: '0.8rem', color: '#666' }}>({displayName(s.author)})</span>
+            <span style={{ fontSize: '0.8rem', color: '#666' }}>({s.author === 'yo' ? 'y' : s.author === 'kanako' ? 'k' : s.author})</span>
           </li>
         ))}
       </ul>
