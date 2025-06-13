@@ -26,9 +26,9 @@ export default function ListPage({ snippets }) {
       <ul>
         {snippets.map((s) => (
           <li key={s.id} style={{ marginBottom: '1rem' }}>
-            <Link href={`/code/${s.id}`}>
-              {s.title || '(無題)'} → /code/{s.id}
-            </Link>
+		<a href={`/code/${s.id}`} target="_blank" rel="noopener noreferrer">
+			{s.title || '(無題)'} → /code/{s.id}
+		</a>
           </li>
         ))}
       </ul>

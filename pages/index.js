@@ -10,12 +10,13 @@ const supabase = createClient(
 export default function Home() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [author, setAuthor] = useState('');
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { data, error } = await supabase.from('snippets').insert([
-      { title, content }
+      { title, content, author }
     ]).select().single();
 
     if (error) {
@@ -35,6 +36,22 @@ export default function Home() {
     }}>
       <h1 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>コード保存</h1>
       <form onSubmit={handleSubmit}>
+	<select
+	  value={author}
+  	  onChange={(e) => setAuthor(e.target.value)}
+  	  required
+          style={{
+            width: '100%',
+    	    padding: '0.5rem',
+    	    marginBottom: '1rem',
+    	    fontSize: '1rem'
+  	  }}
+	>
+       	  <option value="">投稿者を選択</option>
+          <option value="yo">y</option>
+          <option value="kanako">k</option>
+        </select>
+
         <input
           type="text"
           placeholder="タイトル（任意）"
